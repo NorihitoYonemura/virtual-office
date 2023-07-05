@@ -9,7 +9,8 @@ let movement = {};
 
 
 function gameStart() {
-    socket.emit('game-start', { name: "yonemi" });
+    let inputName = prompt("ユーザー名を入力してください", "");
+    socket.emit('game-start', { name: inputName });
 }
 
 $(document).on('keydown keyup', (event) => {
