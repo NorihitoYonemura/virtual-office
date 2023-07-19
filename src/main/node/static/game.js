@@ -40,7 +40,8 @@ socket.on('state', (players, bullets, walls) => {
     context.stroke();
 
     Object.values(players).forEach((player) => {
-        const playerImage = $('#player-image' + player.iconNum)[0];
+        const key4PlayerImage = '#player-image' + player.iconNum;
+        const playerImage = $(key4PlayerImage)[0];
         context.drawImage(playerImage, player.x, player.y, 30, 40);
         context.font = '15px Bold Arial';
         context.fillText(player.name, player.x, player.y - 5);
