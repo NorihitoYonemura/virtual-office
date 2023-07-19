@@ -19,6 +19,7 @@ class Player {
         this.angle = 0;
         this.movement = {};
         this.name = obj.name;
+        this.iconNum = obj.iconNum;
         this.socketId = obj.socketId;
     }
     move(r, l, u, d) {
@@ -35,6 +36,7 @@ io.on('connection', function (socket) {
         player = new Player({
             socketId: socket.id,
             name: config.name,
+            iconNum: config.iconNum,
         });
         players[player.id] = player;
     });

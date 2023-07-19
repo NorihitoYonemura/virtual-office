@@ -3,14 +3,14 @@
 const socket = io();
 const canvas = $('#canvas-2d')[0];
 const context = canvas.getContext('2d');
-const playerImage = $('#player-image')[0];
 const officeMap = $('#office-map')[0];
 let movement = {};
 
 
 function gameStart() {
     let inputName = prompt("ユーザー名を入力してください", "");
-    socket.emit('game-start', { name: inputName });
+    let inputIconNum = prompt("ユーザー名を入力してください。\n1.ヤドキング\n2.クサイハナ\n3.ベロリンガ\n4.モンジャラ\n5.クラウド", "");
+    socket.emit('game-start', { name: inputName, iconNum: inputIconNum });
 }
 
 $(document).on('keydown keyup', (event) => {
@@ -40,6 +40,8 @@ socket.on('state', (players, bullets, walls) => {
     context.stroke();
 
     Object.values(players).forEach((player) => {
+        const key4PlayerImage = '#player-image' + player.iconNum;
+        const playerImage = $(key4PlayerImage)[0];
         context.drawImage(playerImage, player.x, player.y, 30, 40);
         context.font = '15px Bold Arial';
         context.fillText(player.name, player.x, player.y - 5);
