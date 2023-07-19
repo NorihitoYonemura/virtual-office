@@ -9,7 +9,7 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-const FIELD_WIDTH = 2000, FIELD_HEIGHT = 1500;
+const FIELD_WIDTH = 1000, FIELD_HEIGHT = 750;
 
 class Player{
     constructor(obj={}){
@@ -20,6 +20,9 @@ class Player{
         this.y = this.height;
         this.angle = 0;
         this.movement = {};
+        this.name = obj.name;
+        this.iconNum = obj.iconNum;
+        this.socketId = obj.socketId;
     }
     // 画面外に移動しないようにするメソッド
     moveWithLimits(dx, dy) {
@@ -39,43 +42,45 @@ class Player{
 
 let players = {};
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
     let player = null;
     socket.on('game-start', (config) => {
         player = new Player({
             socketId: socket.id,
+            name: config.name,
+            iconNum: config.iconNum,
         });
         players[player.id] = player;
     });
-    socket.on('movement', function(movement) {
-        if(!player){return;}
+    socket.on('movement', function (movement) {
+        if (!player) { return; }
         player.movement = movement;
     });
     socket.on('disconnect', () => {
-        if(!player){return;}
+        if (!player) { return; }
         delete players[player.id];
         player = null;
     });
 });
 
-setInterval(function() {
+setInterval(function () {
     Object.values(players).forEach((player) => {
         const movement = player.movement;
-        if(movement.forward){
-            player.move(0,0,0,10);
+        if (movement.forward) {
+            player.move(0, 0, 0, 5);
         }
-        if(movement.back){
-            player.move(0,0,10,0);
+        if (movement.back) {
+            player.move(0, 0, 5, 0);
         }
-        if(movement.left){
-            player.move(0,10,0,0);
+        if (movement.left) {
+            player.move(0, 5, 0, 0);
         }
-        if(movement.right){
-            player.move(10,0,0,0);
+        if (movement.right) {
+            player.move(5, 0, 0, 0);
         }
     });
     io.sockets.emit('state', players);
-}, 1000/30);
+}, 1000 / 30);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -94,7 +99,7 @@ app.get('/background', (request, response) => {
 
 // multerの設定
 const upload = multer({
-  dest: 'virtual-office/src/main/node/static/uploads', // アップロード先のディレクトリを指定
+  dest: './static/uploads', // アップロード先のディレクトリを指定
 });
 
 app.post('/background2',upload.single('file'),(request, response) => {
@@ -107,6 +112,6 @@ app.post('/background2',upload.single('file'),(request, response) => {
    // response.send('ファイルがアップロードされました');
 });
 
-server.listen(3000, function() {
-  console.log('Starting server on port 3000');
+server.listen(3000, function () {
+    console.log('Starting server on port 3000');
 });
