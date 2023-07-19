@@ -36,7 +36,6 @@ socket.on('state', (players, bullets, walls) => {
 
     context.lineWidth = 10;
     context.beginPath();
-    //    context.rect(0, 0, canvas.width, canvas.height);
     // context.rect(0, 0, canvas.width, canvas.height);
     context.stroke();
 
