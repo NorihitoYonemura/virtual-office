@@ -44,4 +44,19 @@ socket.on('state', (players, bullets, walls) => {
         context.fillText('朝日', player.x, player.y - 5);
     });
 });
+
+// 自分を含む全員宛にメッセージを送信
+$("#sendMessageBtn").click( function() {
+    // メッセージの内容を取得し、その後フォームをクリア
+    var message = $("#messageForm").val();
+    // クライアントからサーバーへ送信
+    socket.emit('message', message);
+    $("#messageForm").val("");
+    });
+
+socket.on('message', function(msg){
+    console.log("aaad2");
+    $("#messageView").append( "<div>" + msg + "</div>" );
+});
+
 socket.on('connect', gameStart);

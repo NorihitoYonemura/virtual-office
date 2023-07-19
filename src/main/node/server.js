@@ -44,6 +44,9 @@ io.on('connection', function(socket) {
         delete players[player.id];
         player = null;
     });
+    socket.on('message', function(msg){
+        io.emit('message', msg);
+    });
 });
 
 setInterval(function() {
