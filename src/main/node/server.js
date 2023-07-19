@@ -26,14 +26,26 @@ class Player{
     }
     // 画面外に移動しないようにするメソッド
     moveWithLimits(dx, dy) {
-        const newX = this.x + dx;
-        const newY = this.y + dy;
+            const newX = this.x + dx;
+            const newY = this.y + dy;
 
-        // 画面左端と右端の制限
-        this.x = Math.max(0, Math.min(newX, FIELD_WIDTH - this.width));
+            // 画面全体の幅と高さを考慮して制限
+            this.x = newX;
+            this.y = newY;
 
-        // 画面上端と下端の制限
-        this.y = Math.max(0, Math.min(newY, FIELD_HEIGHT - this.height));
+            // 左端と右端の制限
+            if (this.x < 0) {
+                this.x = 0;
+            } else if (this.x + this.width > FIELD_WIDTH) {
+                this.x = FIELD_WIDTH - this.width;
+            }
+
+            // 上端と下端の制限
+            if (this.y < 0) {
+                this.y = 0;
+            } else if (this.y + this.height > FIELD_HEIGHT) {
+                this.y = FIELD_HEIGHT - this.height;
+            }
     }
     move(r,l,u,d){
         this.moveWithLimits(r - l, u - d);
