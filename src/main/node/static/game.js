@@ -9,7 +9,7 @@ let movement = {};
 
 function gameStart() {
     let inputName = prompt("ユーザー名を入力してください", "");
-    let inputIconNum = prompt("ユーザー名を入力してください。\n1.ヤドキング\n2.クサイハナ\n3.ベロリンガ\n4.モンジャラ\n5.クラウド", "");
+    let inputIconNum = prompt("使用したいアイコンの番号(半角数字)を入力してください。\n1:ヤドキング\n2:クサイハナ\n3:ベロリンガ\n4:モンジャラ\n5:クラウド", "");
     socket.emit('game-start', { name: inputName, iconNum: inputIconNum });
 }
 
