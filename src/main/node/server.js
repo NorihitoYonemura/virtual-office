@@ -9,7 +9,7 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-const FIELD_WIDTH = 3000, FIELD_HEIGHT = 3000;
+const FIELD_WIDTH = 2000, FIELD_HEIGHT = 1500;
 
 class Player{
     constructor(obj={}){
@@ -21,9 +21,19 @@ class Player{
         this.angle = 0;
         this.movement = {};
     }
+    // 画面外に移動しないようにするメソッド
+    moveWithLimits(dx, dy) {
+        const newX = this.x + dx;
+        const newY = this.y + dy;
+
+        // 画面左端と右端の制限
+        this.x = Math.max(0, Math.min(newX, FIELD_WIDTH - this.width));
+
+        // 画面上端と下端の制限
+        this.y = Math.max(0, Math.min(newY, FIELD_HEIGHT - this.height));
+    }
     move(r,l,u,d){
-        this.x += r-l;
-        this.y += u-d;
+        this.moveWithLimits(r - l, u - d);
     }
 };
 
@@ -84,7 +94,7 @@ app.get('/background', (request, response) => {
 
 // multerの設定
 const upload = multer({
-  dest: 'static/uploads/', // アップロード先のディレクトリを指定
+  dest: 'virtual-office/src/main/node/static/uploads', // アップロード先のディレクトリを指定
 });
 
 app.post('/background2',upload.single('file'),(request, response) => {
