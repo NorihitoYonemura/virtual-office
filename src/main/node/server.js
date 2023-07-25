@@ -77,6 +77,7 @@ io.on('connection', function (socket) {
     });
     socket.on('message', function(msg){
 //          player = new Player({
+//              socketId: socket.id,
 //              msg: msg,
 //          });
 //        players[socket.id] = player;
