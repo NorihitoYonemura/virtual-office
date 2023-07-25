@@ -125,7 +125,7 @@ app.get('/background', (request, response) => {
 
 // multerの設定
 const upload = multer({
-    dest: './static/uploads', // アップロード先のディレクトリを指定
+    dest: 'src/main/node/static/uploads', // アップロード先のディレクトリを指定
 });
 
 app.post('/background2', upload.single('file'), (request, response) => {
