@@ -9,7 +9,7 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-const FIELD_WIDTH = 1000, FIELD_HEIGHT = 750;
+const FIELD_WIDTH = 950, FIELD_HEIGHT = 750;
 
 class Player {
     constructor(obj = {}) {
@@ -43,8 +43,9 @@ class Player {
         }
 
         // 上端と下端の制限
-        if (this.y < 0) {
-            this.y = 0;
+        // コメント+名前の領域分(38px)上限をずらす
+        if (this.y < 38) {
+            this.y = 38;
         } else if (this.y + this.height > FIELD_HEIGHT) {
             this.y = FIELD_HEIGHT - this.height;
         }
@@ -79,13 +80,9 @@ io.on('connection', function (socket) {
     socket.on('message', function (msg) {
         if (!player) { return; }
         player.message = msg;
-
-        //          player = new Player({
-        //              msg: msg,
-        //          });
-        //        players[socket.id] = player;
-        //        console.log(player.msg);
-        // io.emit('message', socket.name + '：' + msg);
+        if (msg) {
+         io.emit('message', socket.name + '：' + msg);
+         }
     });
 });
 

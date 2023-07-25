@@ -43,17 +43,12 @@ socket.on('state', (players, bullets, walls) => {
         const key4PlayerImage = '#player-image' + player.iconNum;
         const playerImage = $(key4PlayerImage)[0];
         context.drawImage(playerImage, player.x, player.y, 30, 40);
-        context.font = '15px Bold Arial';
+        context.font = "12px Arial";
         context.fillText(player.name, player.x, player.y - 5);
         if (player.message) {
-            context.font = '30px Bold Arial';
+            context.font = "18px Arial";
             context.fillText(player.message, player.x, player.y - 20);
         }
-
-        //        console.log(player.msg);
-        //        if(player.msg == 'undefined'){
-        //        context.fillText(player.msg, player.x -10, player.y - 10);
-        //        }
     });
 });
 
