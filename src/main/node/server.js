@@ -20,6 +20,7 @@ class Player {
         this.movement = {};
         this.name = obj.name;
         this.iconNum = obj.iconNum;
+        this.msg = obj.msg;
         this.socketId = obj.socketId;
     }
     move(r, l, u, d) {
@@ -38,6 +39,7 @@ io.on('connection', function (socket) {
             name: config.name,
             iconNum: config.iconNum,
         });
+        socket.name = config.name;
         players[player.id] = player;
     });
     socket.on('movement', function (movement) {
@@ -48,6 +50,14 @@ io.on('connection', function (socket) {
         if (!player) { return; }
         delete players[player.id];
         player = null;
+    });
+    socket.on('message', function(msg){
+//          player = new Player({
+//              msg: msg,
+//          });
+//        players[socket.id] = player;
+//        console.log(player.msg);
+        io.emit('message', socket.name +'：' + msg);
     });
 });
 
