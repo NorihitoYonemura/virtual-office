@@ -112,7 +112,6 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.get('/display', (request, response) => {
     const filePath = request.query.filePath; // クエリパラメータから背景画像のパスを取得
-    console.log(filePath);
     response.render('display', { filePath: filePath });
 });
 
@@ -127,7 +126,6 @@ const upload = multer({
 
 app.post('/background2', upload.single('file'), (request, response) => {
     const uploadedFile = request.file; // アップロードされたファイルの情報
-    console.log(uploadedFile);
     // アップロードされたファイルのパスを取得
     const filePath = `/uploads/${uploadedFile.filename}`;
     // リダイレクトにより、背景画像が反映される画面に遷移する
