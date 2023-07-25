@@ -45,24 +45,29 @@ socket.on('state', (players, bullets, walls) => {
         context.drawImage(playerImage, player.x, player.y, 30, 40);
         context.font = '15px Bold Arial';
         context.fillText(player.name, player.x, player.y - 5);
-//        console.log(player.msg);
-//        if(player.msg == 'undefined'){
-//        context.fillText(player.msg, player.x -10, player.y - 10);
-//        }
+        if (player.message) {
+            context.font = '30px Bold Arial';
+            context.fillText(player.message, player.x, player.y - 20);
+        }
+
+        //        console.log(player.msg);
+        //        if(player.msg == 'undefined'){
+        //        context.fillText(player.msg, player.x -10, player.y - 10);
+        //        }
     });
 });
 
 // 自分を含む全員宛にメッセージを送信
-$("#sendMessageBtn").click( function() {
+$("#sendMessageBtn").click(function () {
     // メッセージの内容を取得し、その後フォームをクリア
     var message = $("#messageForm").val();
     // クライアントからサーバーへ送信
     socket.emit('message', message);
     $("#messageForm").val("");
-    });
+});
 
-socket.on('message', function(msg){
-    $("#messageView").append( "<div>" + msg + "</div>" );
+socket.on('message', function (msg) {
+    $("#messageView").append("<div>" + msg + "</div>");
 });
 
 

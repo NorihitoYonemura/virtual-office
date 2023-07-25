@@ -11,9 +11,9 @@ const io = socketIO(server);
 
 const FIELD_WIDTH = 1000, FIELD_HEIGHT = 750;
 
-class Player{
-    constructor(obj={}){
-        this.id = Math.floor(Math.random()*1000000000);
+class Player {
+    constructor(obj = {}) {
+        this.id = Math.floor(Math.random() * 1000000000);
         this.width = 80;
         this.height = 80;
         this.x = this.width;
@@ -24,31 +24,32 @@ class Player{
         this.iconNum = obj.iconNum;
         this.msg = obj.msg;
         this.socketId = obj.socketId;
+        this.message;
     }
     // 画面外に移動しないようにするメソッド
     moveWithLimits(dx, dy) {
-            const newX = this.x + dx;
-            const newY = this.y + dy;
+        const newX = this.x + dx;
+        const newY = this.y + dy;
 
-            // 画面全体の幅と高さを考慮して制限
-            this.x = newX;
-            this.y = newY;
+        // 画面全体の幅と高さを考慮して制限
+        this.x = newX;
+        this.y = newY;
 
-            // 左端と右端の制限
-            if (this.x < 0) {
-                this.x = 0;
-            } else if (this.x + this.width > FIELD_WIDTH) {
-                this.x = FIELD_WIDTH - this.width;
-            }
+        // 左端と右端の制限
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x + this.width > FIELD_WIDTH) {
+            this.x = FIELD_WIDTH - this.width;
+        }
 
-            // 上端と下端の制限
-            if (this.y < 0) {
-                this.y = 0;
-            } else if (this.y + this.height > FIELD_HEIGHT) {
-                this.y = FIELD_HEIGHT - this.height;
-            }
+        // 上端と下端の制限
+        if (this.y < 0) {
+            this.y = 0;
+        } else if (this.y + this.height > FIELD_HEIGHT) {
+            this.y = FIELD_HEIGHT - this.height;
+        }
     }
-    move(r,l,u,d){
+    move(r, l, u, d) {
         this.moveWithLimits(r - l, u - d);
     }
 };
@@ -75,13 +76,16 @@ io.on('connection', function (socket) {
         delete players[player.id];
         player = null;
     });
-    socket.on('message', function(msg){
-//          player = new Player({
-//              msg: msg,
-//          });
-//        players[socket.id] = player;
-//        console.log(player.msg);
-        io.emit('message', socket.name +'：' + msg);
+    socket.on('message', function (msg) {
+        if (!player) { return; }
+        player.message = msg;
+
+        //          player = new Player({
+        //              msg: msg,
+        //          });
+        //        players[socket.id] = player;
+        //        console.log(player.msg);
+        // io.emit('message', socket.name + '：' + msg);
     });
 });
 
@@ -110,28 +114,28 @@ app.use('/static', express.static(__dirname + '/static'));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.get('/display', (request, response) => {
-   const filePath = request.query.filePath; // クエリパラメータから背景画像のパスを取得
-   console.log(filePath);
-   response.render('display', { filePath: filePath });
+    const filePath = request.query.filePath; // クエリパラメータから背景画像のパスを取得
+    console.log(filePath);
+    response.render('display', { filePath: filePath });
 });
 
 app.get('/background', (request, response) => {
-  response.sendFile(path.join(__dirname, '/static/index2.html'));
+    response.sendFile(path.join(__dirname, '/static/index2.html'));
 });
 
 // multerの設定
 const upload = multer({
-  dest: './static/uploads', // アップロード先のディレクトリを指定
+    dest: './static/uploads', // アップロード先のディレクトリを指定
 });
 
-app.post('/background2',upload.single('file'),(request, response) => {
-　 const uploadedFile = request.file; // アップロードされたファイルの情報
-   console.log(uploadedFile);
-   // アップロードされたファイルのパスを取得
-   const filePath = `/uploads/${uploadedFile.filename}`;
-   // リダイレクトにより、背景画像が反映される画面に遷移する
-   response.redirect(`/display?filePath=${encodeURIComponent(filePath)}`);
-   // response.send('ファイルがアップロードされました');
+app.post('/background2', upload.single('file'), (request, response) => {
+    const uploadedFile = request.file; // アップロードされたファイルの情報
+    console.log(uploadedFile);
+    // アップロードされたファイルのパスを取得
+    const filePath = `/uploads/${uploadedFile.filename}`;
+    // リダイレクトにより、背景画像が反映される画面に遷移する
+    response.redirect(`/display?filePath=${encodeURIComponent(filePath)}`);
+    // response.send('ファイルがアップロードされました');
 });
 
 server.listen(3000, function () {
